@@ -1,0 +1,48 @@
+unit SIS_EMPRESA;
+
+interface
+
+uses
+  Classes,
+  DB,
+  SysUtils,
+  Generics.Collections,
+  /// orm
+  ormbr.mapping.attributes,
+  ormbr.types.mapping,
+  ormbr.types.lazy,
+  ormbr.types.nullable,
+  ormbr.mapping.register;
+
+type
+  [Entity]
+  [Table('EMPRESA','')]
+  [PrimaryKey('EMPRICOD', AutoInc, NoSort, True, 'Chave primária')]
+  TSisEmpresa = class
+  private
+    { Private declarations }
+    fid: Integer;
+    FNOME: String;
+    FFANTASIA: String;
+  public
+    { Public declarations }
+    [Restrictions([NoUpdate, NotNull])]
+    [Column('EMPRICOD', ftInteger)]
+    [Dictionary('EMPRICOD','Mensagem de validação','','','',taCenter)]
+    property id: Integer read fid write fid;
+
+    [Column('EMPRA60RAZAOSOC', ftString, 60)]
+    [Dictionary('EMPRA60RAZAOSOC','Mensagem de validação','','','',taLeftJustify)]
+    property NOME: String read FNOME write FNOME;
+
+    [Column('EMPRA60NOMEFANT', ftString, 60)]
+    [Dictionary('EMPRA60NOMEFANT','Mensagem de validação','','','',taLeftJustify)]
+    property FANTASIA:String read FFANTASIA write FFANTASIA;
+  end;
+
+implementation
+
+initialization
+  TRegisterClass.RegisterEntity(TSisEmpresa);
+
+end.

@@ -1,0 +1,16 @@
+object ORMBr: TORMBr
+  OldCreateOrder = False
+  Height = 266
+  Width = 372
+  object FDConnection1: TFDConnection
+    Params.Strings = (
+      'Database=Automafour'
+      'User_Name=SYSDBA'
+      'Password=masterkey'
+      'CharacterSet=WIN1252'
+      'DriverID=FB')
+    LoginPrompt = False
+    Left = 36
+    Top = 36
+  end
+end

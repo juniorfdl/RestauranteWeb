@@ -1,0 +1,44 @@
+unit GRUPO;
+
+interface
+
+uses
+  Classes,
+  DB,
+  SysUtils,
+  Generics.Collections,
+  ormbr.mapping.attributes,
+  ormbr.types.mapping,
+  ormbr.types.lazy,
+  ormbr.types.nullable,
+  ormbr.mapping.register;
+
+type
+  [Entity]
+  [Table('GRUPO','')]
+  [PrimaryKey('ID', AutoInc, NoSort, True, 'Chave primária')]
+  TGRUPO = class
+  private
+    FID: Integer;
+    { Private declarations }
+  public
+    { Public declarations }
+    [Restrictions([NoUpdate, NotNull])]
+    [Column('GRUPICOD', ftInteger)]
+    [Dictionary('GRUPICOD','Mensagem de validação','','','',taCenter)]
+    property id: Integer read FID write FID;
+
+    [Column('GRUPA60DESCR', ftString, 60)]
+    //[Dictionary('OBS','Mensagem de validação','','','',taLeftJustify)]
+    property GRUPA60DESCR:String read FGRUPA60DESCR write FGRUPA60DESCR;
+
+  end;
+
+implementation
+
+{ TGRUPO }
+
+initialization
+  TRegisterClass.RegisterEntity(TGRUPO);
+
+end.

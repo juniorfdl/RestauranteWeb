@@ -1,0 +1,49 @@
+unit CONFIG_RESTAURANTE;
+
+interface
+
+uses
+  Classes,
+  DB,
+  SysUtils,
+  Generics.Collections,
+  /// orm
+  ormbr.mapping.attributes,
+  ormbr.types.mapping,
+  ormbr.types.lazy,
+  ormbr.types.nullable,
+  ormbr.mapping.register;
+
+type
+  [Entity]
+  [Table('CONFIG_RESTAURANTE','')]
+  [PrimaryKey('ID', AutoInc, NoSort, True, 'Chave primária')]
+  TCONFIG_RESTAURANTE = class
+  private
+    FOBS: String;
+    FID: Integer;
+    FMESA: String;
+    { Private declarations }
+  public
+    { Public declarations }
+    [Restrictions([NoUpdate, NotNull])]
+    [Column('ID', ftInteger)]
+    [Dictionary('ID','Mensagem de validação','','','',taCenter)]
+    property id: Integer read FID write FID;
+
+    //[Column('MESA', ftString, 60)]
+    //[Dictionary('MESA','Mensagem de validação','','','',taLeftJustify)]
+    property MESA: String read FMESA write FMESA;
+
+    //[Column('OBS', ftString, 60)]
+    //[Dictionary('OBS','Mensagem de validação','','','',taLeftJustify)]
+    property OBS:String read FOBS write FOBS;
+
+  end;
+
+implementation
+
+initialization
+  TRegisterClass.RegisterEntity(TSisUsuario);
+
+end.
