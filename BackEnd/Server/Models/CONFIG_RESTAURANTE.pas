@@ -22,6 +22,7 @@ type
     FOBS: String;
     FID: Integer;
     FMESA: Integer;
+    fPedidoAberto: String;
     { Private declarations }
   public
     { Public declarations }
@@ -38,6 +39,7 @@ type
     //[Dictionary('OBS','Mensagem de validação','','','',taLeftJustify)]
     property OBS:String read FOBS write FOBS;
 
+    property PedidoAberto:String read fPedidoAberto write fPedidoAberto;
   end;
 
 implementation

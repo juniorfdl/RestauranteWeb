@@ -24,6 +24,7 @@ type
     FGRUPA60DESCR: String;
     fGRUPICOD: Integer;
     fPRODN3VLRVENDA: Double;
+    fIMPRESSO: String;
     { Private declarations }
   public
     { Public declarations }
@@ -39,6 +40,9 @@ type
 
     [Column('PRODN3VLRVENDA', ftInteger)]
     property PRODN3VLRVENDA: Double read fPRODN3VLRVENDA write fPRODN3VLRVENDA;
+
+    [Restrictions([NoValidate])]
+    property IMPRESSO: String read fIMPRESSO write fIMPRESSO;
 
     [Restrictions([NoValidate])]
     property QTD: Nullable<Integer> read fQTD write fQTD;

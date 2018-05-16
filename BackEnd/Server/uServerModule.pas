@@ -51,6 +51,7 @@ type
     procedure GeneratorKeys;
     procedure RecoversKeys;
     procedure ControleDeSessao;
+    function ConfirmarPedido(AValue: TJSONObject): TJSONObject;
   public
     { Public declarations }
     function master(AID: Integer = 0): TJSONArray;
@@ -129,6 +130,132 @@ begin
     end; }
 end;
 
+function TORMBr.ConfirmarPedido(AValue: TJSONObject): TJSONObject;
+var
+  LMasterList: TObjectList<TPEDIDO>;
+  vPed: TPEDIDO;
+  vstr, vOBS, vNomeUsr, vEmpresa: String;
+  vProd: TPRODUTO;
+  ii: Integer;
+  vInsert,vItemImpresso: Boolean;
+  vlistImp:TStringList;
+  F: TIniFile;
+begin
+  ControleDeSessao;
+  vItemImpresso := False;
+  vlistImp:= TStringList.Create;
+  vlistImp.Add('</zera>');
+
+  vstr := AValue.ToJSON;
+  vPed := TORMBrJson.JsonToObject<TPEDIDO>(vstr);
+
+  with FConnection.ExecuteSQL(' SELECT empra60nomefant FROM empresa ') do
+  begin
+    if RecordCount > 0 then
+    begin
+      vEmpresa:= FieldByName('empra60nomefant').AsString;
+      vlistImp.Add('</c><n></ce>'+vEmpresa+'</n>');
+    end;
+  end;
+
+  with FConnection.ExecuteSQL(' select usuaa60login from USUARIO where USUAICOD = '+IntToStr(vPed.CodUsr)) do
+  begin
+    if RecordCount > 0 then
+    begin
+      vNomeUsr:= FieldByName('usuaa60login').AsString;
+    end;
+  end;
+
+  if vPed.OBS = EmptyStr then
+    vOBS := 'null'
+  else
+    vOBS := QuotedStr(vPed.OBS.Trim());
+
+  if vPed.id <= 0 then
+  begin
+    vPed.id := 0;
+  end
+  else vlistImp.Add('</c><n></ce>PEDIDO ALTERADO</n>');
+
+  vstr := 'select id from SP_GRAVAR_PEDIDO_WEB(' + vPed.id.ToString + ', ' +
+    vPed.CodUsr.ToString + ', ' + vPed.Mesa.ToString + ', ' +
+    vPed.Total.ToString().Replace(',', '.') + ' , ' + vOBS + ')';
+
+  vPed.id := FConnection.ExecuteSQL(vstr).FieldByName('id').AsInteger;
+
+  vlistImp.Add('</c><n></ce>PEDIDO_NRO: '+FormatFloat('####0000',vPed.id)+'</n>');
+  vlistImp.Add('</c><n></ce>Mesa: '+vPed.Mesa.ToString+'</n>');
+  vlistImp.Add('</linha_simples>');
+  vlistImp.Add('</c><n></ce>PRODUTOS</n>');
+  vlistImp.Add('</linha_simples>');
+
+  ii := 0;
+  for vProd in vPed.Produtos do
+  begin
+    inc(ii);
+    vstr := 'select id from SP_GRAVAR_PEDIDO_ITEM_WEB(' + vPed.id.ToString + ', ' +
+      vPed.CodUsr.ToString + ', ' + vPed.Mesa.ToString + ', ' + vProd.PRODN3VLRVENDA.ToString()
+      .Replace(',', '.') + ', ' + IntToStr(vProd.QTD) + ',' + ii.ToString + ', ' +
+      IntToStr(vProd.id) + ')';
+
+    FConnection.ExecuteSQL(vstr);
+
+    if (vProd.IMPRESSO <> 'S')or(vPed.ReImprimir = 'S') then
+    begin
+      vlistImp.Add('</c><n></ae>'+FormatFloat('000', vProd.QTD)+' '+vProd.PRODA60DESCR+'</n>');
+      vItemImpresso := True;
+
+      vstr := ' UPDATE prevendaitem SET IMPRESSO = ''S'' where prvdicod = '
+       +vPed.id.ToString+' and PVITIPOS = '+ii.ToString+' AND PRODICOD = '+ vProd.id.ToString;
+      FConnection.ExecuteDirect(vstr);
+      vProd.IMPRESSO := 'S';
+    end;
+
+  end;
+
+  Result := TORMBrJSONUtil.JSONStringToJSONObject
+    (TORMBrJson.ObjectToJsonString(vPed));
+
+  if vPed.OBS <> EmptyStr then
+  begin
+    vlistImp.Add('</linha_simples>');
+    vlistImp.Add('</c><n>'+vPed.OBS+'</n>');
+    vlistImp.Add(' ');
+  end;
+
+  vlistImp.Add('</linha_simples>');
+  vlistImp.Add('</fn></ce>'+FormatDateTime('dd/mm/yy hh:mm', Now)+' '+vNomeUsr);
+
+  //vlistImp.Add('<e><n>NEGRITO E EXPANDIDA</n></e>');
+
+  vlistImp.Add(' ');
+  vlistImp.Add(' ');
+  vlistImp.Add(' ');
+
+  //vlistImp.Add('</corte_parcial>');
+  vlistImp.Add('</corte_total>');
+
+  if vItemImpresso then
+  if FileExists(ExtractFilePath(Application.ExeName) + 'Conf.ini') then
+  begin
+    try
+      F:= TIniFile.Create(ExtractFilePath(Application.ExeName) + 'Conf.ini');
+      try
+        ACBrPosPrinter1.Porta := F.ReadString('ELGIN','PORTA','');
+        ACBrPosPrinter1.Ativar;
+        ACBrPosPrinter1.Imprimir(vlistImp.Text);
+      finally
+        ACBrPosPrinter1.Desativar;
+        F.Free;
+      end;
+    except
+
+    end;
+  end;
+
+  FreeAndNil(vlistImp);
+end;
+
 procedure TORMBr.ControleDeSessao;
 begin
   DeleteKeys;
@@ -194,7 +321,8 @@ var
   LGrupoList: TObjectList<TGRUPO>;
   LProdutoList: TObjectList<TPRODUTO>;
   vGrupo: TGRUPO;
-  v: String;
+  v, vsql: String;
+  vMesa: TCONFIG_RESTAURANTE;
 begin
   ControleDeSessao;
 
@@ -205,6 +333,20 @@ begin
     LMesaList := TContainerObjectSet<TCONFIG_RESTAURANTE>.Create
       (FConnection).Find;
     LGrupoList := TContainerObjectSet<TGRUPO>.Create(FConnection).Find;
+
+    for vMesa in LMesaList do
+    begin
+      vsql := ' select first(1) prvdicod from prevenda where PRVDCIMPORT <> ''S'' and mesaicod = '
+        + vMesa.MESA.ToString;
+
+      with FConnection.ExecuteSQL(vsql) do
+      begin
+        if RecordCount > 0 then
+        begin
+          vMesa.PedidoAberto := 'S';
+        end;
+      end;
+    end;
 
     if LMasterList.Count = 1 then
     begin
@@ -335,7 +477,7 @@ begin
     end;
   end;
 
-  vstr := 'select a.PRODICOD,a.PVITN3QTD,a.PVITN3VLRUNIT, b.proda60descr, b.grupicod '
+  vstr := 'select a.PRODICOD,a.PVITN3QTD,a.PVITN3VLRUNIT, b.proda60descr, b.grupicod, a.IMPRESSO '
           + ' from prevendaitem a inner join produto b on b.prodicod = a.prodicod '
           +' where a.PRVDICOD = ' + item.id.ToString;
 
@@ -349,6 +491,7 @@ begin
       vProd.GRUPICOD := FieldByName('grupicod').AsInteger;
       vProd.PRODN3VLRVENDA := FieldByName('PVITN3VLRUNIT').AsFloat;
       vProd.QTD := FieldByName('PVITN3QTD').AsInteger;
+      vProd.IMPRESSO := FieldByName('IMPRESSO').AsString;
       item.Produtos.Add(vProd);
     end;
   end;
@@ -358,117 +501,15 @@ begin
 end;
 
 function TORMBr.updateConfirmarPedido(AValue: TJSONObject): TJSONObject;
-var
-  LMasterList: TObjectList<TPEDIDO>;
-  vPed: TPEDIDO;
-  vstr, vOBS, vNomeUsr, vEmpresa: String;
-  vProd: TPRODUTO;
-  ii: Integer;
-  vInsert: Boolean;
-  vlistImp:TStringList;
-  F: TIniFile;
 begin
-  ControleDeSessao;
-  vlistImp:= TStringList.Create;
-  vlistImp.Add('</zera>');
-
-  vstr := AValue.ToJSON;
-  vPed := TORMBrJson.JsonToObject<TPEDIDO>(vstr);
-
-  with FConnection.ExecuteSQL(' SELECT empra60nomefant FROM empresa ') do
-  begin
-    if RecordCount > 0 then
+  try
+    Result := ConfirmarPedido(AValue);
+  except
+    on e: Exception do
     begin
-      vEmpresa:= FieldByName('empra60nomefant').AsString;
-      vlistImp.Add('</c><n></ce>'+vEmpresa+'</n>');
+      Result := TORMBrJSONUtil.JSONStringToJSONObject(TORMBrJson.ObjectToJsonString(TJSONString.Create(e.Message)));
     end;
   end;
-
-  with FConnection.ExecuteSQL(' select usuaa60login from USUARIO where USUAICOD = '+IntToStr(vPed.CodUsr)) do
-  begin
-    if RecordCount > 0 then
-    begin
-      vNomeUsr:= FieldByName('usuaa60login').AsString;
-    end;
-  end;
-
-  if vPed.OBS = EmptyStr then
-    vOBS := 'null'
-  else
-    vOBS := QuotedStr(vPed.OBS.Trim());
-
-  if vPed.id <= 0 then
-  begin
-    vPed.id := 0;
-  end
-  else vlistImp.Add('</c><n></ce>PEDIDO ALTERADO</n>');
-
-  vstr := 'select id from SP_GRAVAR_PEDIDO_WEB(' + vPed.id.ToString + ', ' +
-    vPed.CodUsr.ToString + ', ' + vPed.Mesa.ToString + ', ' +
-    vPed.Total.ToString().Replace(',', '.') + ' , ' + vOBS + ')';
-
-  vPed.id := FConnection.ExecuteSQL(vstr).FieldByName('id').AsInteger;
-
-  vlistImp.Add('</c><n></ce>PEDIDO_NRO: '+FormatFloat('####0000',vPed.id)+'</n>');
-  vlistImp.Add('</c><n></ce>Mesa: '+vPed.Mesa.ToString+'</n>');
-  vlistImp.Add('</linha_simples>');
-  vlistImp.Add('</c><n></ce>PRODUTOS</n>');
-  vlistImp.Add('</linha_simples>');
-
-  ii := 0;
-  for vProd in vPed.Produtos do
-  begin
-    inc(ii);
-    vstr := 'select id from SP_GRAVAR_PEDIDO_ITEM_WEB(' + vPed.id.ToString + ', ' +
-      vPed.CodUsr.ToString + ', ' + vPed.Mesa.ToString + ', ' + vProd.PRODN3VLRVENDA.ToString()
-      .Replace(',', '.') + ', ' + IntToStr(vProd.QTD) + ',' + ii.ToString + ', ' +
-      IntToStr(vProd.id) + ')';
-
-    FConnection.ExecuteSQL(vstr);
-
-    vlistImp.Add('</c><n></ae>'+FormatFloat('000', vProd.QTD)+' '+vProd.PRODA60DESCR+'</n>');
-  end;
-
-  Result := TORMBrJSONUtil.JSONStringToJSONObject
-    (TORMBrJson.ObjectToJsonString(vPed));
-
-  if vPed.OBS <> EmptyStr then
-  begin
-    vlistImp.Add('</linha_simples>');
-    vlistImp.Add('</c><n>'+vPed.OBS+'</n>');
-    vlistImp.Add(' ');
-  end;
-
-  vlistImp.Add('</linha_simples>');
-  vlistImp.Add('</fn></ce>'+FormatDateTime('dd/mm/yy hh:mm', Now)+' '+vNomeUsr);
-
-  //vlistImp.Add('<e><n>NEGRITO E EXPANDIDA</n></e>');
-
-  vlistImp.Add(' ');
-  vlistImp.Add(' ');
-  vlistImp.Add(' ');
-
-  //vlistImp.Add('</corte_parcial>');
-  vlistImp.Add('</corte_total>');
-
-  if FileExists(ExtractFilePath(Application.ExeName) + 'Conf.ini') then
-  begin
-    try
-      F:= TIniFile.Create(ExtractFilePath(Application.ExeName) + 'Conf.ini');
-      try
-        ACBrPosPrinter1.Porta := F.ReadString('ELGIN','PORTA','');
-        ACBrPosPrinter1.Ativar;
-        ACBrPosPrinter1.Imprimir(vlistImp.Text);
-      finally
-        ACBrPosPrinter1.Desativar;
-        F.Free;
-      end;
-    except
-
-    end;
-  end;
-
-  FreeAndNil(vlistImp);
 end;
 
 end.

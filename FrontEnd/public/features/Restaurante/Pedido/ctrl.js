@@ -12,12 +12,30 @@ var App;
         var CrudpedidoCtrl = (function (_super) {
 
             __extends(CrudpedidoCtrl, _super);
-            function CrudpedidoCtrl($rootScope, api, CrudpedidoService, lista, $q, $scope, SweetAlert) {
+            function CrudpedidoCtrl($location, $rootScope, api, CrudpedidoService, lista, $q, $scope, SweetAlert) {
                 var _this = this;
                 _super.call(this);
 
+                this.$location = $location;
                 this.SweetAlert = SweetAlert;
-                                
+                this.$rootScope = $rootScope;
+                this.api = api;
+                this.crudSvc = CrudpedidoService;
+                this.lista = lista;
+                this.VisualizarProdutos = false;
+                this.VisualizarGrupo = false;
+
+                this.cssMesa = function(pmesa){
+                    debugger;
+                    if (pmesa.PedidoAberto == 'S'){
+                        return 'btn btn-danger btn-lg badge-pill active';
+                    }
+                    else {
+                        return 'btn btn-primary btn-lg badge-pill active';
+                    }
+
+                }
+                
                 this.IniciarPedido = function () {
                     this.Pedido = {};
                     this.Pedido.id = -1;
@@ -28,22 +46,42 @@ var App;
                     this.Pedido.OBS = "";
                 }
 
-                this.IniciarPedido();
+                this.IniciarPedido();                
 
-                this.$rootScope = $rootScope;
+                this.DesejaReimprimir = function () {
+                    
+                    if (_this.Pedido.id > 0) {
 
-                this.api = api;
-                this.crudSvc = CrudpedidoService;
-                this.lista = lista;
-                this.VisualizarProdutos = false;
-                this.VisualizarGrupo = false;
-                
+                        _this.Pedido.ReImprimir = 'N';
+                        _this.SweetAlert.swal({
+                            title: "Deseja reimprimir itens já impresso?",
+                            type: "warning",
+                            showCancelButton: true,
+                            confirmButtonColor: "#DD6B55",
+                            confirmButtonText: "Sim",
+                            cancelButtonText: "Nao"
+                        }, function (isConfirm) {
+
+                            debugger;
+
+                            if (isConfirm) {
+                                _this.Pedido.ReImprimir = 'S';
+                            }
+
+                            _this.crudSvc.ConfirmarPedido(_this.Pedido).then(function (dados) {
+                                _this.Pedido.id = dados.id;
+                                _this.Cancelar();
+                                _this.$location.path('/home');
+                            });
+
+                        });
+                    }
+
+                }
+
                 this.ConfirmarPedido = function () {
-					_this.Pedido.CodUsr = $rootScope.currentUser.id;
-                    _this.crudSvc.ConfirmarPedido(_this.Pedido).then(function (dados) {
-                        debugger;
-                        _this.Pedido.id = dados.id;
-                    });
+                    _this.Pedido.CodUsr = $rootScope.currentUser.id;
+                    _this.DesejaReimprimir();                    
                 }
 
                 this.GetTotal = function () {
@@ -68,26 +106,25 @@ var App;
 
                         if (isConfirm) {
                             _this.crudSvc.PedidoMesa(index).then(function (dados) {
-                                
-                                if (dados.result) {  
-                                     dados = dados.result[0];
+
+                                if (dados.result) {
+                                    debugger;
+                                    dados = dados.result[0];
                                     _this.Pedido.id = dados.id;
                                     _this.Pedido.CodUsr = dados.CodUsr;
                                     _this.Pedido.Total = dados.Total;
                                     _this.VerResumo = true;
                                     _this.Pedido.OBS = dados.OBS;
-                                                                                                            
-                                    for (var i = 0; i < dados.Produtos.length; i++)
-                                    {
-                                        for (var iG = 0; iG < _this.$rootScope.currentUser.Grupos.length; iG++)
-                                        {
+
+                                    for (var i = 0; i < dados.Produtos.length; i++) {
+                                        for (var iG = 0; iG < _this.$rootScope.currentUser.Grupos.length; iG++) {
                                             if (_this.$rootScope.currentUser.Grupos[iG].id == dados.Produtos[i].GRUPICOD) {
                                                 _this.SetGrupo(_this.$rootScope.currentUser.Grupos[iG]);
 
-                                                for (var iP = 0; iP < _this.Produtos.length; iP++)
-                                                {
+                                                for (var iP = 0; iP < _this.Produtos.length; iP++) {
                                                     if (_this.Produtos[iP].id == dados.Produtos[i].id) {
                                                         _this.Produtos[iP].QTD = dados.Produtos[i].QTD - 1;
+                                                        _this.Produtos[iP].IMPRESSO = dados.Produtos[i].IMPRESSO;
                                                         _this.AddProduto(_this.Produtos[iP]);
                                                         break;
                                                     }
@@ -99,11 +136,11 @@ var App;
                                     }
                                 }
                             });
-                        }                        
-                                                
+                        }
+
                         _this.Pedido.Mesa = index;
                     });
-                                        
+
                 }
 
                 this.SetGrupo = function (grupo) {
@@ -118,7 +155,7 @@ var App;
                 this.AddProduto = function (Produto) {
                     debugger;
                     if (!Produto.QTD)
-                      Produto.QTD = 0;
+                        Produto.QTD = 0;
 
                     Produto.QTD++;
 
@@ -155,11 +192,11 @@ var App;
                     this.IniciarPedido();
 
                     if (_this.Produtos)
-                    for (var i = 0; i < _this.Produtos.length; i++) {                        
-                        _this.Produtos[i].QTD = 0;                                                  
-                    }
+                        for (var i = 0; i < _this.Produtos.length; i++) {
+                            _this.Produtos[i].QTD = 0;
+                        }
 
-                    
+
                 }
 
                 this.Resumo = function () {
@@ -175,7 +212,7 @@ var App;
                     _this.VisualizarProdutos = false;
                     _this.VisualizarGrupo = true;
                 }
-                                
+
             }
 
             CrudpedidoCtrl.prototype.crud = function () {

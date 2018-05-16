@@ -70,8 +70,8 @@
             <div class="col-3 col-lg-3 blockquote"
                  ng-repeat="mesa in $root.currentUser.CONFIG_RESTAURANTE | orderBy:'OBS' |filter:ctrl.Pedido.FiltroMesa ">
                 <br />
-                <button type="button" class="btn btn-primary btn-lg badge-pill active" style="height:100px"
-                        ng-click="ctrl.SetMesa(mesa.MESA)">
+                <button type="button" style="height:100px"
+                        ng-click="ctrl.SetMesa(mesa.MESA)" ng-class="ctrl.cssMesa(mesa)">
                     {{mesa.OBS}}
                 </button>
                 <br />
@@ -100,7 +100,6 @@
         </div>
     </div>
 </div>
-
 
 <div class="container" ng-show="ctrl.VisualizarProdutos && !ctrl.VerResumo">
 
