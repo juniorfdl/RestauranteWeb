@@ -17,11 +17,15 @@ var App;
             function CrudpedidoService($q, api, $rootScope) {
                 _super.apply(this, arguments);
 
-                this.ConfirmarPedido = function (dados) {
+              this.ConfirmarPedido = function (dados) {
                     debugger;
                     return this.api.save(dados);
                     //return this.api.allLook(dados, 'sis_usuario/confirmarpedido');
               };
+
+              this.BuscarMesas = function () {
+                return this.api.allLook(null,'tormbr/DadosMesas');
+              }
 
               this.PedidoMesa = function (mesa) {
                   debugger;

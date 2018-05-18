@@ -1,41 +1,52 @@
 ﻿[Closed Files]
-File_0=TSourceModule,'C:\ProjetosWeb2.0\Inpulse\BackEnd\Server\Controller\Sistema\Server.Controller.Sistema.Login.pas',0,1,43,60,55,0,0,,
-File_1=TSourceModule,'C:\ProjetosWeb2.0\Inpulse\BackEnd\Server\Base\Server.Base.Crud.pas',0,1,58,1,74,0,0,,
-File_2=TSourceModule,'C:\ProjetosWeb2.0\Inpulse\BackEnd\Server\Models\Base\Server.Models.Base.TabelaBase.pas',0,1,19,11,32,0,0,,
-File_3=TSourceModule,'C:\ProjetosWeb2.0\Inpulse\BackEnd\Server\Models\Cadastros\Server.Models.Cadastros.Login.pas',0,1,39,60,56,0,0,,
-File_4=TSourceModule,'C:\ProjetosWeb2.0\DataSnap\Source\Core\ormbr.command.factory.pas',0,1,93,1,111,0,0,,
-File_5=TSourceModule,'c:\program files (x86)\embarcadero\studio\18.0\source\rtl\common\System.Generics.Collections.pas',0,1,6428,1,6444,0,0,,
-File_6=TSourceModule,'C:\ProjetosWeb2.0\Inpulse\BackEnd\Server\Models\Cadastros\Server.Models.Cadastros.Operadores.pas',0,1,56,34,86,0,0,,
-File_7=TSourceModule,'C:\ProjetosWeb2.0\DataSnap\Source\Core\ormbr.objects.helper.pas',0,1,74,1,94,0,0,,
-File_8=TSourceModule,'C:\ProjetosWeb2.0\DataSnap\Source\Objectset\ormbr.container.objectset.pas',0,1,25,1,43,0,0,,
-File_9=TSourceModule,'C:\ProjetosWeb2.0\DataSnap\Source\Objectset\ormbr.objectset.adapter.pas',0,1,78,1,96,0,0,,
-File_10=TSourceModule,'C:\ProjetosWeb2.0\DataSnap\Source\Objectset\ormbr.session.objectset.pas',0,1,68,1,87,0,0,,
-File_11=TSourceModule,'C:\ProjetosWeb2.0\DataSnap\Source\Core\ormbr.objects.manager.pas',0,1,101,1,120,0,0,,
-File_12=TSourceModule,'C:\ProjetosWeb2.0\DataSnap\Source\Drivers\ormbr.factory.firedac.pas',0,1,121,1,140,0,0,,
-File_13=TSourceModule,'C:\ProjetosWeb2.0\DataSnap\Source\Core\ormbr.command.updater.pas',0,1,51,1,69,0,0,,
+File_0=TSourceModule,'c:\program files (x86)\embarcadero\studio\18.0\source\Indy10\Core\IdThread.pas',0,1,414,1,430,0,0,,
+File_1=TSourceModule,'c:\program files (x86)\embarcadero\studio\18.0\source\data\firedac\FireDAC.Comp.Client.pas',0,1,11072,1,11088,0,0,,
+File_2=TSourceModule,'C:\ProjetosWeb2.0\Restaurante\BackEnd\Server\uWebModule.pas',0,1,37,31,40,0,0,,
+File_3=TSourceModule,'c:\program files (x86)\embarcadero\studio\18.0\source\data\firedac\FireDAC.Phys.pas',0,1,6781,1,6810,0,0,,
+File_4=TSourceModule,'C:\ProjetosWeb2.0\Inpulse\BackEnd\Server\Controller\Sistema\Server.Controller.Sistema.Login.pas',0,1,43,60,55,0,0,,
+File_5=TSourceModule,'C:\ProjetosWeb2.0\Inpulse\BackEnd\Server\Base\Server.Base.Crud.pas',0,1,58,1,74,0,0,,
+File_6=TSourceModule,'C:\ProjetosWeb2.0\Inpulse\BackEnd\Server\Models\Base\Server.Models.Base.TabelaBase.pas',0,1,19,11,32,0,0,,
+File_7=TSourceModule,'C:\ProjetosWeb2.0\Inpulse\BackEnd\Server\Models\Cadastros\Server.Models.Cadastros.Login.pas',0,1,39,60,56,0,0,,
+File_8=TSourceModule,'C:\ProjetosWeb2.0\DataSnap\Source\Core\ormbr.command.factory.pas',0,1,93,1,111,0,0,,
+File_9=TSourceModule,'c:\program files (x86)\embarcadero\studio\18.0\source\rtl\common\System.Generics.Collections.pas',0,1,6428,1,6444,0,0,,
+File_10=TSourceModule,'C:\ProjetosWeb2.0\Inpulse\BackEnd\Server\Models\Cadastros\Server.Models.Cadastros.Operadores.pas',0,1,56,34,86,0,0,,
+File_11=TSourceModule,'C:\ProjetosWeb2.0\DataSnap\Source\Core\ormbr.objects.helper.pas',0,1,74,1,94,0,0,,
+File_12=TSourceModule,'C:\ProjetosWeb2.0\DataSnap\Source\Objectset\ormbr.container.objectset.pas',0,1,25,1,43,0,0,,
+File_13=TSourceModule,'C:\ProjetosWeb2.0\DataSnap\Source\Objectset\ormbr.objectset.adapter.pas',0,1,78,1,96,0,0,,
+File_14=TSourceModule,'C:\ProjetosWeb2.0\DataSnap\Source\Objectset\ormbr.session.objectset.pas',0,1,68,1,87,0,0,,
 
 [Modules]
-Module0=C:\ProjetosWeb2.0\Restaurante\BackEnd\Server\uWebModule.pas
-Module1=C:\ProjetosWeb2.0\Restaurante\BackEnd\Server\uServerModule.pas
-Module2=C:\ProjetosWeb2.0\Restaurante\BackEnd\Server\uFormServer.pas
-Count=3
+Module0=C:\ProjetosWeb2.0\Restaurante\BackEnd\Server\uServerModule.pas
+Module1=C:\ProjetosWeb2.0\Restaurante\BackEnd\Server\Models\CONFIG_RESTAURANTE.pas
+Module2=C:\ProjetosWeb2.0\Restaurante\BackEnd\Server\Models\PRODUTO.pas
+Module3=C:\ProjetosWeb2.0\Restaurante\BackEnd\Server\Models\PEDIDO.pas
+Module4=C:\ProjetosWeb2.0\Restaurante\BackEnd\Server\uFormServer.pas
+Count=5
 EditWindowCount=1
 
-[C:\ProjetosWeb2.0\Restaurante\BackEnd\Server\uWebModule.pas]
+[C:\ProjetosWeb2.0\Restaurante\BackEnd\Server\uServerModule.pas]
 ModuleType=TSourceModule
 
-[C:\ProjetosWeb2.0\Restaurante\BackEnd\Server\uServerModule.pas]
+[C:\ProjetosWeb2.0\Restaurante\BackEnd\Server\Models\CONFIG_RESTAURANTE.pas]
+ModuleType=TSourceModule
+
+[C:\ProjetosWeb2.0\Restaurante\BackEnd\Server\Models\PRODUTO.pas]
+ModuleType=TSourceModule
+
+[C:\ProjetosWeb2.0\Restaurante\BackEnd\Server\Models\PEDIDO.pas]
 ModuleType=TSourceModule
 
 [C:\ProjetosWeb2.0\Restaurante\BackEnd\Server\uFormServer.pas]
 ModuleType=TSourceModule
 
 [EditWindow0]
-ViewCount=3
-CurrentEditView=C:\ProjetosWeb2.0\Restaurante\BackEnd\Server\uWebModule.pas
+ViewCount=5
+CurrentEditView=C:\ProjetosWeb2.0\Restaurante\BackEnd\Server\uServerModule.pas
 View0=0
 View1=1
 View2=2
+View3=3
+View4=4
 PercentageSizes=1
 Create=1
 Visible=1
@@ -58,7 +69,7 @@ LeftPanelData=0000080001010100000009000000446F636B536974653372120000000000000100
 RightPanelSize=0
 BottomPanelSize=0
 BottomPanelClients=DockSite1
-BottomPanelData=0000080001000100000009000000446F636B53697465317A45000000000000000D06000000000000FFFFFFFF
+BottomPanelData=0000080001000100000009000000446F636B53697465317A4500000000000000F305000000000000FFFFFFFF
 BottomMiddlePanelSize=0
 BottomMiddlePanelClients=DockSite0,GraphDrawingModel
 BottomMiddelPanelData=0000080001020200000009000000446F636B536974653010000000477261706844726177696E67566965779A1D00000000000002F806000000000000FFFFFFFF
@@ -80,24 +91,46 @@ EditViewName=C:\ProjetosWeb2.0\Restaurante\BackEnd\Server\uFormServer.pas
 [View1]
 CustomEditViewType=TEditView
 Module=C:\ProjetosWeb2.0\Restaurante\BackEnd\Server\uServerModule.pas
-CursorX=3
-CursorY=103
-TopLine=102
+CursorX=92
+CursorY=334
+TopLine=323
 LeftCol=1
-Elisions=
-Bookmarks=
+Elisions={{102,25},{113,3},{''}}
+Bookmarks={1,348,11}
 EditViewName=C:\ProjetosWeb2.0\Restaurante\BackEnd\Server\uServerModule.pas
 
 [View2]
 CustomEditViewType=TEditView
-Module=C:\ProjetosWeb2.0\Restaurante\BackEnd\Server\uWebModule.pas
-CursorX=3
-CursorY=57
-TopLine=37
+Module=C:\ProjetosWeb2.0\Restaurante\BackEnd\Server\Models\CONFIG_RESTAURANTE.pas
+CursorX=26
+CursorY=42
+TopLine=22
 LeftCol=1
 Elisions=
 Bookmarks=
-EditViewName=C:\ProjetosWeb2.0\Restaurante\BackEnd\Server\uWebModule.pas
+EditViewName=C:\ProjetosWeb2.0\Restaurante\BackEnd\Server\Models\CONFIG_RESTAURANTE.pas
+
+[View3]
+CustomEditViewType=TEditView
+Module=C:\ProjetosWeb2.0\Restaurante\BackEnd\Server\Models\PRODUTO.pas
+CursorX=33
+CursorY=44
+TopLine=22
+LeftCol=1
+Elisions=
+Bookmarks=
+EditViewName=C:\ProjetosWeb2.0\Restaurante\BackEnd\Server\Models\PRODUTO.pas
+
+[View4]
+CustomEditViewType=TEditView
+Module=C:\ProjetosWeb2.0\Restaurante\BackEnd\Server\Models\PEDIDO.pas
+CursorX=66
+CursorY=42
+TopLine=34
+LeftCol=1
+Elisions=
+Bookmarks=
+EditViewName=C:\ProjetosWeb2.0\Restaurante\BackEnd\Server\Models\PEDIDO.pas
 
 [UndockedDesigner]
 Count=0
@@ -127,7 +160,10 @@ Dockable=1
 StayOnTop=0
 
 [Breakpoints]
-Count=0
+Count=3
+Breakpoint0='C:\ProjetosWeb2.0\Restaurante\BackEnd\Server\uServerModule.pas',510,'',0,1,'',1,0,0,'',1,'','','',0,''
+Breakpoint1='C:\ProjetosWeb2.0\Restaurante\BackEnd\Server\uServerModule.pas',238,'',0,1,'',1,0,0,'',1,'','','',0,''
+Breakpoint2='C:\ProjetosWeb2.0\Restaurante\BackEnd\Server\uServerModule.pas',203,'',0,1,'',1,0,0,'',1,'','','',0,''
 
 [EmbarcaderoWin32Debugger_AddressBreakpoints]
 Count=0
@@ -192,15 +228,15 @@ Create=1
 Visible=0
 Docked=1
 State=0
-Left=0
-Top=18
-Width=10000
-Height=1387
+Left=1
+Top=27
+Width=9985
+Height=1360
 MaxLeft=-1
 MaxTop=-1
-ClientWidth=10000
-ClientHeight=1387
-TBDockHeight=1387
+ClientWidth=9985
+ClientHeight=1360
+TBDockHeight=1360
 LRDockWidth=2767
 Dockable=1
 StayOnTop=0
@@ -281,11 +317,6 @@ LRDockWidth=1896
 Dockable=1
 StayOnTop=0
 SplitPos=111
-
-[PropInspDesignerSelection]
-ArrangeBy=Name
-SelectedItem=Name,
-ExpandedItems=
 
 [ClassBrowserTool]
 PercentageSizes=1
@@ -745,7 +776,7 @@ HostDockSite=RightTabDock
 DockSiteType=1
 PercentageSizes=1
 Create=1
-Visible=0
+Visible=1
 Docked=1
 State=0
 Left=4

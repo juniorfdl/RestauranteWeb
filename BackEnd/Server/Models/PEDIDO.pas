@@ -26,6 +26,7 @@ type
     fTotal: Double;
     fMesa: Integer;
     fReImprimir: String;
+    fOBS_MESA: String;
     { Private declarations }
   public
     constructor create;
@@ -40,6 +41,8 @@ type
     property OBS:String read fOBS write fOBS;
 
     property ReImprimir:String read fReImprimir write fReImprimir;
+    property OBS_MESA:String read fOBS_MESA write fOBS_MESA;
+
 
     //[Restrictions([NoValidate])]
     property Produtos: TObjectList<TPRODUTO> read fProdutos write fProdutos;

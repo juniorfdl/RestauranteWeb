@@ -24,18 +24,30 @@ var App;
                 this.lista = lista;
                 this.VisualizarProdutos = false;
                 this.VisualizarGrupo = false;
+                this.OBS_MESA = '';
 
-                this.cssMesa = function(pmesa){
-                    debugger;
-                    if (pmesa.PedidoAberto == 'S'){
+                this.BuscarMesas = function (){
+                    _this.crudSvc.BuscarMesas().then(function (dados) {
+                        if (dados.result) {
+                            debugger;
+                            _this.CONFIG_RESTAURANTE = dados.result[0];
+                        }
+                    });
+                }
+
+                this.BuscarMesas();
+
+                this.cssMesa = function (pmesa) {
+
+                    if (pmesa.PedidoAberto == 'S') {
                         return 'btn btn-danger btn-lg badge-pill active';
                     }
                     else {
-                        return 'btn btn-primary btn-lg badge-pill active';
+                        return 'btn btn-success btn-lg badge-pill active';
                     }
 
                 }
-                
+
                 this.IniciarPedido = function () {
                     this.Pedido = {};
                     this.Pedido.id = -1;
@@ -46,7 +58,7 @@ var App;
                     this.Pedido.OBS = "";
                 }
 
-                this.IniciarPedido();                
+                this.IniciarPedido();
 
                 this.DesejaReimprimir = function () {
                     
@@ -76,12 +88,20 @@ var App;
 
                         });
                     }
+					else {
+						_this.Pedido.ReImprimir = 'S';
+						_this.crudSvc.ConfirmarPedido(_this.Pedido).then(function (dados) {
+                                _this.Pedido.id = dados.id;
+                                _this.Cancelar();
+                                _this.$location.path('/home');
+                            });
+					}
 
                 }
 
                 this.ConfirmarPedido = function () {
                     _this.Pedido.CodUsr = $rootScope.currentUser.id;
-                    _this.DesejaReimprimir();                    
+                    _this.DesejaReimprimir();
                 }
 
                 this.GetTotal = function () {
@@ -91,55 +111,68 @@ var App;
                     }
                 }
 
-                this.SetMesa = function (index) {
-                    
-                    _this.SweetAlert.swal({
-                        title: "Buscar Ultimo Pedido da Mesa?",
-                        type: "warning",
-                        showCancelButton: true,
-                        confirmButtonColor: "#DD6B55",
-                        confirmButtonText: "Sim",
-                        cancelButtonText: "Nao"
-                    }, function (isConfirm) {
-                        _this.VisualizarProdutos = false;
-                        _this.VisualizarGrupo = true;
+                this.BuscarDadosMesa = function (pMesa) {
 
-                        if (isConfirm) {
-                            _this.crudSvc.PedidoMesa(index).then(function (dados) {
+                    var index = pMesa.MESA;                   
 
-                                if (dados.result) {
-                                    debugger;
-                                    dados = dados.result[0];
-                                    _this.Pedido.id = dados.id;
-                                    _this.Pedido.CodUsr = dados.CodUsr;
-                                    _this.Pedido.Total = dados.Total;
-                                    _this.VerResumo = true;
-                                    _this.Pedido.OBS = dados.OBS;
+                    _this.crudSvc.PedidoMesa(index).then(function (dados) {
+                        if (dados.result) {
+                            debugger;
+                            dados = dados.result[0];
+                            _this.Pedido.id = dados.id;
+                            _this.Pedido.CodUsr = dados.CodUsr;
+                            _this.Pedido.Total = dados.Total;
+                            _this.VerResumo = true;
+                            _this.Pedido.OBS = dados.OBS;
 
-                                    for (var i = 0; i < dados.Produtos.length; i++) {
-                                        for (var iG = 0; iG < _this.$rootScope.currentUser.Grupos.length; iG++) {
-                                            if (_this.$rootScope.currentUser.Grupos[iG].id == dados.Produtos[i].GRUPICOD) {
-                                                _this.SetGrupo(_this.$rootScope.currentUser.Grupos[iG]);
+                            for (var i = 0; i < dados.Produtos.length; i++) {
+                                for (var iG = 0; iG < _this.$rootScope.currentUser.Grupos.length; iG++) {
+                                    if (_this.$rootScope.currentUser.Grupos[iG].id == dados.Produtos[i].GRUPICOD) {
+                                        _this.SetGrupo(_this.$rootScope.currentUser.Grupos[iG]);
 
-                                                for (var iP = 0; iP < _this.Produtos.length; iP++) {
-                                                    if (_this.Produtos[iP].id == dados.Produtos[i].id) {
-                                                        _this.Produtos[iP].QTD = dados.Produtos[i].QTD - 1;
-                                                        _this.Produtos[iP].IMPRESSO = dados.Produtos[i].IMPRESSO;
-                                                        _this.AddProduto(_this.Produtos[iP]);
-                                                        break;
-                                                    }
-                                                }
+                                        for (var iP = 0; iP < _this.Produtos.length; iP++) {
+                                            if (_this.Produtos[iP].id == dados.Produtos[i].id) {
+                                                _this.Produtos[iP].QTD = dados.Produtos[i].QTD - 1;
+                                                _this.Produtos[iP].IMPRESSO = dados.Produtos[i].IMPRESSO;
+                                                _this.AddProduto(_this.Produtos[iP]);
                                                 break;
                                             }
                                         }
-
+                                        break;
                                     }
                                 }
-                            });
-                        }
 
-                        _this.Pedido.Mesa = index;
+                            }
+                        }
                     });
+                }
+
+                this.SetMesa = function (pMesa) {
+                    var index = pMesa.MESA;
+                    this.OBS_MESA = pMesa.OBS;                    
+                    this.Pedido.Mesa = index;
+
+                    if (pMesa.PedidoAberto != 'S') {
+                       this.VisualizarProdutos = false;
+                       this.VisualizarGrupo = true;                                                
+                    }
+                    else {
+                        _this.SweetAlert.swal({
+                            title: "Buscar Ultimo Pedido da Mesa?",
+                            type: "warning",
+                            showCancelButton: true,
+                            confirmButtonColor: "#DD6B55",
+                            confirmButtonText: "Sim",
+                            cancelButtonText: "Nao"
+                        }, function (isConfirm) {                            
+
+                            if (isConfirm) {
+                                _this.BuscarDadosMesa(pMesa);  
+                            }
+                            _this.VisualizarProdutos = false;
+                            _this.VisualizarGrupo = true;
+                        });
+                    }
 
                 }
 
