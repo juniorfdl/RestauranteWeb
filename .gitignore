@@ -85,3 +85,6 @@ $RECYCLE.BIN/
 *.lnk
 *.~414~
 *.~415~
+*.dcu
+*.dsk
+*.exe

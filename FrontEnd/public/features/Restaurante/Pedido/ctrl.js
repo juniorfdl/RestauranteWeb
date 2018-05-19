@@ -56,6 +56,7 @@ var App;
                     this.Pedido.Total = 0;
                     this.Pedido.CodUsr = $rootScope.currentUser.id;
                     this.Pedido.OBS = "";
+					this.Pedido.OBS_MESA = this.OBS_MESA;
                 }
 
                 this.IniciarPedido();
@@ -66,7 +67,7 @@ var App;
 
                         _this.Pedido.ReImprimir = 'N';
                         _this.SweetAlert.swal({
-                            title: "Deseja reimprimir itens já impresso?",
+                            title: "Deseja reimprimir itens j? impresso?",
                             type: "warning",
                             showCancelButton: true,
                             confirmButtonColor: "#DD6B55",
@@ -101,6 +102,7 @@ var App;
 
                 this.ConfirmarPedido = function () {
                     _this.Pedido.CodUsr = $rootScope.currentUser.id;
+					_this.Pedido.OBS_MESA = _this.OBS_MESA;
                     _this.DesejaReimprimir();
                 }
 
@@ -151,6 +153,7 @@ var App;
                     var index = pMesa.MESA;
                     this.OBS_MESA = pMesa.OBS;                    
                     this.Pedido.Mesa = index;
+					this.Pedido.OBS_MESA = this.OBS_MESA;
 
                     if (pMesa.PedidoAberto != 'S') {
                        this.VisualizarProdutos = false;
