@@ -1,0 +1,51 @@
+CREATE OR ALTER procedure SP_GRAVAR_PEDIDO_MESA_WEB (
+    PCODIGO integer,
+    PVENDEDOR integer,
+    PVALOR numeric(15,2))
+as
+begin
+
+  if (EXISTS(select 1 from MESA WHERE mesaicod = :pcodigo)) then
+  BEGIN
+    UPDATE MESA SET mesan3vlrtotal = :pVALOR WHERE mesaicod = :pcodigo;
+  END
+  ELSE BEGIN
+    INSERT INTO MESA
+      (mesaicod, mesaicapac, mesacstatus,  mesadabertura, mesan3vlrtotal, vendicod)
+    VALUES
+      (:pcodigo, 5, 'P', current_timestamp,  :pvalor, :pVENDEDOR);
+  END
+
+  suspend;
+end;
+
+
+CREATE OR ALTER procedure SP_GRAVAR_PEDIDO_ITEM_WEB (
+    PID integer,
+    COD_USR integer,
+    NR_MESA integer,
+    VALOR numeric(15,2),
+    QTD numeric(15,2),
+    ITEM integer,
+    ID_PRODUTO integer)
+returns (
+    ID integer)
+AS
+begin
+
+  delete from prevendaitem
+  where prvdicod = :pid and PVITIPOS > :item;
+
+  update or insert into prevendaitem
+  (TERMICOD,PRVDICOD,PVITIPOS,PRODICOD,PVITN3QTD,PVITN3VLRUNIT,PVITN3VLRCUSTUNIT,
+   VENDICOD, PVITCSTATUS)
+   values
+   (11, :pid, :item, :id_produto, :qtd, :valor, :qtd * :valor, :cod_usr, 'A');
+
+  id = pid;
+
+  EXECUTE PROCEDURE SP_GRAVAR_PEDIDO_MESA_WEB(:nr_mesa, :cod_usr,
+    (SELECT SUM(PVITN3VLRCUSTUNIT) FROM prevendaitem WHERE prvdicod = :pid));
+
+  suspend;
+end;
