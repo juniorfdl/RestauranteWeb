@@ -93,3 +93,7 @@ $RECYCLE.BIN/
 *.exe
 *.stat
 BackEnd/Server/ORMBrServer.~dsk
+*.dcu
+*.exe
+BackEnd/Server/ORMBrServer.stat
+*.exe
