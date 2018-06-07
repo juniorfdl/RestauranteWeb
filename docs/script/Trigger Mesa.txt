@@ -1,0 +1,7 @@
+CREATE trigger tg_mesa_ai0 for mesa
+active after insert position 0
+AS
+begin
+  if (NOt exists(select 1 from config_restaurante where MESA = NEW.mesaicod)) then
+    INSERT INTO config_restaurante VALUES (NEW.mesaicod, NEW.mesaicod, 'COMANDA '||LPAD(NEW.mesaicod, 3, 0));
+end;
